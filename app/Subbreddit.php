@@ -17,13 +17,13 @@ class Subbreddit extends Model
     /**
      * Get the user it belongs to.
      */
-    public function users()
+    public function user()
     {
-        return $this->hasMany('App\User');
+        return $this->belongsTo('App\User');
     }
 
     /**
-     * Get the users that are subscribed to this subbreddit.
+     * Get the subscribed users of this subbreddit.
      */
     public function subscribedUsers()
     {

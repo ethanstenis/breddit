@@ -25,17 +25,25 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the posts for the subbreddit.
+     * Get the posts for the user.
      */
     public function posts()
     {
         return $this->hasMany('App\Post');
     }
 
-    /**
-     * Get the subbreddits for the user.
+        /**
+     * Get the comments for the user.
      */
-    public function subbreddit()
+    public function comments()
+    {
+        return $this->hasMany('App\Comment');
+    }
+
+    /**
+     * Get the subbreddits the user has created.
+     */
+    public function subbreddits()
     {
         return $this->hasMany('App\Subbreddit');
     }
