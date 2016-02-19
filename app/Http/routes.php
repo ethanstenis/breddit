@@ -11,9 +11,12 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::resource('posts', 'PostsController');
+Route::resource('users', 'UsersController');
+Route::resource('subbreddits', 'SubbredditsController', [
+	'except' => ['edit', 'create']
+	]);
+Route::resource('comments', 'CommentsController');
 
 /*
 |--------------------------------------------------------------------------
@@ -28,4 +31,10 @@ Route::get('/', function () {
 
 Route::group(['middleware' => ['web']], function () {
     //
+});
+
+Route::group(['middleware' => 'web'], function () {
+    Route::auth();
+
+    Route::get('/home', 'HomeController@index');
 });

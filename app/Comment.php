@@ -31,4 +31,13 @@ class Comment extends Model
     	return $this->belongsTo('App\Comment');
 	}
 
+		/**
+ 	* Get the child comment of a comment.
+ 	*/
+
+	public function childComment() 
+   {
+       return $this->belongsTo('App\Comment');
+   }
+
 }
