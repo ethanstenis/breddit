@@ -46,7 +46,7 @@ class UsersController extends Controller
     public function update(Request $request, $id)
     {
         $user = \App\User::find($id);
-        $user->user_id = Auth::user()->id;
+        $user->user_id = \Auth::user()->id;
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = $request->password;

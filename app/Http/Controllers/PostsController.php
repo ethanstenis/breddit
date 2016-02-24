@@ -29,9 +29,11 @@ class PostsController extends Controller
     public function store(Request $request)
     {
         $post = new \App\Post;
-        $post->user_id = Auth::user()->id;
+        $post->user_id = \Auth::user()->id;
         $post->title = $request->title;
-        $post->content = $request->content;
+        $post->content = $request->post_content;
+        $post->subbreddit_id = $request->subbreddit_id;
+        $post->url = $request->url;
         $post->save();
 
         return $post;
@@ -45,6 +47,8 @@ class PostsController extends Controller
      */
     public function show($id)
     {
+        //Basic markup -> return \App\Post::find($id);
+
         return \App\Post::with([
             'subbreddit', 
             'user',
@@ -62,9 +66,11 @@ class PostsController extends Controller
     public function update(Request $request, $id)
     {
         $post = \App\Post::find($id);
-        $post->user_id = Auth::user()->id;
+        $post->user_id = \Auth::user()->id;
         $post->title = $request->title;
-        $post->content = $request->content;
+        $post->content = $request->post_content;
+        $post->subbreddit_id = $request->subbreddit_id;
+        $post->url = $request->url;
         $post->save();
 
         return $post;

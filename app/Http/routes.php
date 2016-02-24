@@ -11,10 +11,10 @@
 |
 */
 
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::resource('posts', 'PostsController');
-Route::resource('users', 'UsersController');
-Route::resource('comments', 'CommentsController');
 
 /*
 |--------------------------------------------------------------------------
@@ -27,23 +27,23 @@ Route::resource('comments', 'CommentsController');
 |
 */
 
-Route::group(['middleware' => ['web']], function () {
-    Route::get('/', function () {
-    return view('welcome');
-});
-
-    Route::resource('subbreddits', 'SubbredditsController', [
-	'only' => ['index', 'show']
-	]);
-});
 
 Route::group(['middleware' => 'web'], function () {
     Route::auth();
 
     Route::get('/home', 'HomeController@index');
 
-    Route::resource('subbreddits', 'SubbredditsController', [
-	'except' => ['create', 'edit']
-	]);
+    Route::resource('subbreddits', 'SubbredditsController', ['except' => ['create', 'edit']]);
 
+    Route::resource('posts', 'PostsController', ['except' => ['create', 'edit']]);
+
+    Route::resource('users', 'UsersController', ['except' => ['create', 'edit']]);
+
+    Route::resource('comments', 'CommentsController', ['except' => ['create', 'edit']]);
+
+    Route::group(['middleware' => 'auth'], function () {
+        Route::resource('subbreddits', 'SubbredditsController', [
+    	   'only' => ['store', 'update', 'destroy']
+    	]);
+    });    
 });
