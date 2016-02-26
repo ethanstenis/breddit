@@ -66,12 +66,16 @@ class PostsController extends Controller
     public function update(Request $request, $id)
     {
         $post = \App\Post::find($id);
-        $post->user_id = \Auth::user()->id;
-        $post->title = $request->title;
-        $post->content = $request->post_content;
-        $post->subbreddit_id = $request->subbreddit_id;
-        $post->url = $request->url;
-        $post->save();
+        if ($post->user_id = \Auth::user()->id) {
+            $post->title = $request->title;
+            $post->content = $request->post_content;
+            $post->subbreddit_id = $request->subbreddit_id;
+            $post->url = $request->url;
+            $post->save();        
+
+        } else { 
+            return response ("Unauthorized", 403);
+        }
 
         return $post;
     }
@@ -85,8 +89,12 @@ class PostsController extends Controller
     public function destroy($id)
     {
         $post = \App\Post::find($id);
-        $post->delete();
-
+        if ($post->user_id = \Auth::user()->id) {
+            $post->delete();
+        
+        } else { 
+            return response ("Unauthorized", 403);
+        }
         return $post;
     }
 }
