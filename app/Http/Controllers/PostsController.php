@@ -31,7 +31,7 @@ class PostsController extends Controller
         $post = new \App\Post;
         $post->user_id = \Auth::user()->id;
         $post->title = $request->title;
-        $post->content = $request->post_content;
+        $post->post_content = $request->post_content;
         $post->subbreddit_id = $request->subbreddit_id;
         $post->url = $request->url;
         $post->save();
@@ -68,7 +68,7 @@ class PostsController extends Controller
         $post = \App\Post::find($id);
         if ($post->user_id = \Auth::user()->id) {
             $post->title = $request->title;
-            $post->content = $request->post_content;
+            $post->post_content = $request->post_content;
             $post->subbreddit_id = $request->subbreddit_id;
             $post->url = $request->url;
             $post->save();        
