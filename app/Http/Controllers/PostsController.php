@@ -16,7 +16,7 @@ class PostsController extends Controller
      */
     public function index()
     {
-        return \App\Post::all();
+        return \App\Post::with('subbreddit')->orderBy('id', 'desc')->get();
     }
 
 
