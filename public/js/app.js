@@ -6,16 +6,12 @@ $.ajaxSetup({
     }
 });
 
+// MODELS
+
 // This creates the Frontend Post Model
 var PostModel = Backbone.Model.extend({
 	urlRoot: '/api/posts/',
 	idAttribute: 'id'
-});
-
-// This creates the Frontend Post Collection
-var PostCollection = Backbone.Collection.extend({
-	url: '/api/posts',
-	model: PostModel
 });
 
 // This creates the Frontend Subbreddit Model
@@ -24,22 +20,10 @@ var SubbredditModel = Backbone.Model.extend({
 	idAttribute: 'id'
 });
 
-// This creates the Frontend Subbreddit Collection
-var SubbredditCollection = Backbone.Collection.extend({
-	url: '/api/subbreddits',
-	model: PostModel
-});
-
 // This creates the Frontend Comment Model
 var CommentModel = Backbone.Model.extend({
 	urlRoot: '/api/comments/',
 	idAttribute: 'id'
-});
-
-// This creates the Frontend Comment Collection
-var CommentCollection = Backbone.Collection.extend({
-	url: '/api/comments',
-	model: PostModel
 });
 
 // This creates the Frontend User Model
@@ -48,38 +32,80 @@ var UserModel = Backbone.Model.extend({
 	idAttribute: 'id'
 });
 
-// This creates the Frontend User Collection
-var UserCollection = Backbone.Collection.extend({
-	url: '/api/users',
+
+// COLLECTIONS
+
+// This creates the Frontend Post Collection
+var PostsCollection = Backbone.Collection.extend({
+	url: '/api/posts/',
 	model: PostModel
 });
 
+// This creates the Frontend Subbreddit Collection
+var SubbredditsCollection = Backbone.Collection.extend({
+	url: '/api/subbreddits/',
+	model: SubbredditModel
+});
 
-// This creates the Frontend Post View
+// This creates the Frontend Comment Collection
+var CommentsCollection = Backbone.Collection.extend({
+	url: '/api/comments/',
+	model: CommentModel
+});
+
+// This creates the Frontend User Collection
+var UsersCollection = Backbone.Collection.extend({
+	url: '/api/users/',
+	model: UserModel
+});
+
+
+// VIEWS
+
+// This creates the Frontend Post Item View
 var PostItemView = Backbone.View.extend({
-	el: '<div></div>',
+	el: '<li class="hello"></li>',
 
-	template: _.template('\
-		<h2><%= post.get("title") %></h2>\
-		'), 
+	template: _.template('<h2><%= post.get("title") %></h2>'), 
 
-	render: function () {
-		this.$el.html(this.template({post: this.model}))
+	render: function() {
+		this.$el.html(this.template({post: this.model}));
 	}
 });
 
-// This creates an instance of the Frontend Post View
-var post = new PostModel({id: 1});
+var PostsListView = Backbone.View.extend({
+	el: '<ul></ul>',
 
-post.fetch({
-	success: function () {
-		var postItemView = new PostItemView({ model: post });
-		postItemView.render();
-	$('#content').html(postItemView.el);
+	template: 'undefined',
+
+	render: function() {
+		var that = this;
+		this.collection.each(function(postModel) {
+			var postItemView = new PostItemView({ model: postModel });
+			postItemView.render();
+			that.$el.append(postItemView.el);
+		});
 	}
 });
 
 
+
+// This creates a new Post Model
+// var post = new PostModel({id: 1});
+
+// This executes a 'GET' request
+// post.fetch({
+// 	success: function() {
+// 		var postItemView = new PostItemView({ model: post });
+// 		postItemView.render();
+
+// 		$('#content').html(postItemView.el);
+// 	}
+// });
+
+
+
+// The code below it the LONG way to create ajax calls for each model. We added the .ajaxSetup above in order to create cleaner code.
 /*
 $.ajax('/api/subbreddits', {
 	type: 'GET',

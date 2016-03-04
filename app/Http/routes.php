@@ -38,7 +38,7 @@ Route::group(['middleware' => 'web'], function () {
     // This is where our app lives
     Route::get('/home', 'HomeController@index');
 
-    Route::group(['prefix' => 'api'], function () {
+    Route::group(['prefix' => 'api'], function() {
 
         Route::resource('subbreddits', 'SubbredditsController', ['only' => ['index', 'show']]);
 
@@ -48,7 +48,7 @@ Route::group(['middleware' => 'web'], function () {
 
         Route::resource('comments', 'CommentsController', ['only' => ['index', 'show']]);
 
-        Route::group(['middleware' => 'auth'], function () {
+        Route::group(['middleware' => 'auth'], function() {
 
             Route::resource('subbreddits', 'SubbredditsController', [
         	   'only' => ['store', 'update', 'destroy']
