@@ -6,19 +6,56 @@ $.ajaxSetup({
     }
 });
 
+// This creates the Frontend Post Model
 var PostModel = Backbone.Model.extend({
 	urlRoot: '/api/posts/',
 	idAttribute: 'id'
 });
 
-
+// This creates the Frontend Post Collection
 var PostCollection = Backbone.Collection.extend({
 	url: '/api/posts',
 	model: PostModel
 });
 
-// Homework: Make a Model and Collection for Comments, Subbreddits, Users
+// This creates the Frontend Subbreddit Model
+var SubbredditModel = Backbone.Model.extend({
+	urlRoot: '/api/subbreddits/',
+	idAttribute: 'id'
+});
 
+// This creates the Frontend Subbreddit Collection
+var SubbredditCollection = Backbone.Collection.extend({
+	url: '/api/subbreddits',
+	model: PostModel
+});
+
+// This creates the Frontend Comment Model
+var CommentModel = Backbone.Model.extend({
+	urlRoot: '/api/comments/',
+	idAttribute: 'id'
+});
+
+// This creates the Frontend Comment Collection
+var CommentCollection = Backbone.Collection.extend({
+	url: '/api/comments',
+	model: PostModel
+});
+
+// This creates the Frontend User Model
+var UserModel = Backbone.Model.extend({
+	urlRoot: '/api/users/',
+	idAttribute: 'id'
+});
+
+// This creates the Frontend User Collection
+var UserCollection = Backbone.Collection.extend({
+	url: '/api/users',
+	model: PostModel
+});
+
+
+// This creates the Frontend Post View
 var PostItemView = Backbone.View.extend({
 	el: '<div></div>',
 
@@ -31,6 +68,7 @@ var PostItemView = Backbone.View.extend({
 	}
 });
 
+// This creates an instance of the Frontend Post View
 var post = new PostModel({id: 1});
 
 post.fetch({
