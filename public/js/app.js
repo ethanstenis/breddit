@@ -6,7 +6,7 @@ $.ajaxSetup({
     }
 });
 
-// MODELS
+// MODELS - takes care of the resource functions
 
 // This creates the Frontend Post Model
 var PostModel = Backbone.Model.extend({
@@ -66,7 +66,22 @@ var UsersCollection = Backbone.Collection.extend({
 var PostItemView = Backbone.View.extend({
 	el: '<li class="hello"></li>',
 
-	template: _.template('<h2><%= post.get("title") %></h2>'), 
+	template: _.template('<h2><%= post.get("title") %></h2>'),
+
+  events: {
+    'click h2': function(e) {
+        this.model.destroy({
+          wait: true
+        });
+    }
+  },
+
+  initialize: function() {
+    this.listenTo(this.model, 'all', function() {
+      console.log(arguments);
+    });
+    this.listenTo(this.model, 'sync', this.render);
+  },
 
 	render: function() {
 		this.$el.html(this.template({post: this.model}));
@@ -78,17 +93,34 @@ var PostsListView = Backbone.View.extend({
 
 	template: 'undefined',
 
+  initialize: function() {
+    this.listenTo(this.collection, 'all', function() {
+      console.log(event);
+    });
+    this.listenTo(this.collection, 'sync update', this.render);
+  },
+
 	render: function() {
 		var that = this;
+    this.$el.html('');
 		this.collection.each(function(postModel) {
 			var postItemView = new PostItemView({ model: postModel });
 			postItemView.render();
 			that.$el.append(postItemView.el);
 		});
+    return this;
 	}
 });
 
+// New iteration of a Posts Collection
+var posts = new PostsCollection();
+// fetch data for posts
+posts.fetch();
 
+var postsListView = new PostsListView({collection: posts});
+postsListView.render();
+
+$('#content').html(postsListView.el);
 
 // This creates a new Post Model
 // var post = new PostModel({id: 1});
@@ -114,7 +146,7 @@ $.ajax('/api/subbreddits', {
 		_.each(subbreddits, function(subbreddit) {
 			console.log(subbreddit);
 			string += subbreddit.name;
-			string += ' '; 
+			string += ' ';
 		})
 		$('#content').text(string);
 	}
@@ -127,7 +159,7 @@ $.ajax('/api/posts', {
 		_.each(posts, function(post) {
 			console.log(post);
 			string += post.name;
-			string += ' '; 
+			string += ' ';
 		})
 		$('#content').text(string);
 	}
@@ -140,7 +172,7 @@ $.ajax('/api/comments', {
 		_.each(comments, function(comment) {
 			console.log(comment);
 			string += comment.name;
-			string += ' '; 
+			string += ' ';
 		})
 		$('#content').text(string);
 	}
