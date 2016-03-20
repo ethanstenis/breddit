@@ -70,9 +70,7 @@ var PostItemView = Backbone.View.extend({
 
   events: {
     'click h2': function(e) {
-        this.model.destroy({
-          wait: true
-        });
+        this.model.destroy();
     }
   },
 
@@ -121,7 +119,7 @@ var postsListView = new PostsListView({collection: posts});
 postsListView.render();
 
 $('#content').html(postsListView.el);
-
+  console.log('view inserted!');
 // This creates a new Post Model
 // var post = new PostModel({id: 1});
 
