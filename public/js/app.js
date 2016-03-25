@@ -1,68 +1,125 @@
 'use strict';
 
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+// Also can write: $(document).on('ready', function) {
+
+// $(document).ready(function) {
+
+  $.ajaxSetup({
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+  });
+
+  // MODELS - takes care of the resource functions
+
+  // This creates the Frontend Post Model
+  var PostModel = Backbone.Model.extend({
+  	urlRoot: '/api/posts/',
+  	idAttribute: 'id'
+  });
+
+  // This creates the Frontend Subbreddit Model
+  var SubbredditModel = Backbone.Model.extend({
+  	urlRoot: '/api/subbreddits/',
+  	idAttribute: 'id'
+  });
+
+  // This creates the Frontend Comment Model
+  var CommentModel = Backbone.Model.extend({
+  	urlRoot: '/api/comments/',
+  	idAttribute: 'id'
+  });
+
+  // This creates the Frontend User Model
+  var UserModel = Backbone.Model.extend({
+  	urlRoot: '/api/users/',
+  	idAttribute: 'id'
+  });
+
+
+  // COLLECTIONS
+
+  // This creates the Frontend Post Collection
+  var PostsCollection = Backbone.Collection.extend({
+  	url: '/api/posts/',
+  	model: PostModel
+  });
+
+  // This creates the Frontend Subbreddit Collection
+  var SubbredditsCollection = Backbone.Collection.extend({
+  	url: '/api/subbreddits/',
+  	model: SubbredditModel
+  });
+
+  // This creates the Frontend Comment Collection
+  var CommentsCollection = Backbone.Collection.extend({
+  	url: '/api/comments/',
+  	model: CommentModel
+  });
+
+  // This creates the Frontend User Collection
+  var UsersCollection = Backbone.Collection.extend({
+  	url: '/api/users/',
+  	model: UserModel
+  });
+
+
+  // VIEWS
+
+  var HomeView = Backbone.View.extend({
+    el: '\
+      <div class="container">\
+        <div class="row">\
+          <div class="three columns"></div>\
+          <div class="six columns"></div>\
+            <div class="row">\
+              <div class="twelve columns"></div>\
+            </div>\
+            <div class="row">\
+              <div class="twelve columns"></div>\
+            </div>\
+            <div class="three columns" id="all-subbreddits"></div>\
+        </div>\
+      </div>\
+    ',
+
+    render: function() {
+      var that = this;
+      var subbreddits = new SubbredditsCollection();
+      subbreddits.fetch();
+      var subbredditsListView = new SubbredditsListView({
+            collection: subbreddits
+      });
+      this.$el.find('#all-subbreddits').html(subbredditsListView.render().el);
+      // Render functions should always return 'this' at the end.
+      return this;
     }
-});
+  });
 
-// MODELS - takes care of the resource functions
+  var SubbredditsListView = Backbone.View.extend({
+    el: '<ul></ul>',  // put parent container in 'el' variable, and rest in template
 
-// This creates the Frontend Post Model
-var PostModel = Backbone.Model.extend({
-	urlRoot: '/api/posts/',
-	idAttribute: 'id'
-});
+    template: _.template('\
+      <% subbreddits.each(function(subbreddit) { %>\
+        <li><a href="#"><% subbreddit.get("name") %></a><li>\
+        <% }) %>\
+    '),
 
-// This creates the Frontend Subbreddit Model
-var SubbredditModel = Backbone.Model.extend({
-	urlRoot: '/api/subbreddits/',
-	idAttribute: 'id'
-});
+    initialize: function() {
+      this.listenTo(this.collection, 'update', this.render);
+    },
 
-// This creates the Frontend Comment Model
-var CommentModel = Backbone.Model.extend({
-	urlRoot: '/api/comments/',
-	idAttribute: 'id'
-});
+    render: function() {
+      $(this.el).html(this.template({ subbreddits: this.collection }));
+      return this;
+    }
+  });
 
-// This creates the Frontend User Model
-var UserModel = Backbone.Model.extend({
-	urlRoot: '/api/users/',
-	idAttribute: 'id'
-});
+  var homeView = new HomeView();
+  $('#content').html(homeView.render().el);
+// })
 
-
-// COLLECTIONS
-
-// This creates the Frontend Post Collection
-var PostsCollection = Backbone.Collection.extend({
-	url: '/api/posts/',
-	model: PostModel
-});
-
-// This creates the Frontend Subbreddit Collection
-var SubbredditsCollection = Backbone.Collection.extend({
-	url: '/api/subbreddits/',
-	model: SubbredditModel
-});
-
-// This creates the Frontend Comment Collection
-var CommentsCollection = Backbone.Collection.extend({
-	url: '/api/comments/',
-	model: CommentModel
-});
-
-// This creates the Frontend User Collection
-var UsersCollection = Backbone.Collection.extend({
-	url: '/api/users/',
-	model: UserModel
-});
-
-
-// VIEWS
-
-// This creates the Frontend Post Item View
+/* This creates the Frontend Post Item View
 var PostItemView = Backbone.View.extend({
 	el: '<li class="hello"></li>',
 
@@ -120,18 +177,8 @@ postsListView.render();
 
 $('#content').html(postsListView.el);
   console.log('view inserted!');
-// This creates a new Post Model
-// var post = new PostModel({id: 1});
+*/
 
-// This executes a 'GET' request
-// post.fetch({
-// 	success: function() {
-// 		var postItemView = new PostItemView({ model: post });
-// 		postItemView.render();
-
-// 		$('#content').html(postItemView.el);
-// 	}
-// });
 
 
 
