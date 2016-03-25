@@ -101,7 +101,7 @@
 
     template: _.template('\
       <% subbreddits.each(function(subbreddit) { %>\
-        <li><a href="#"><% subbreddit.get("name") %></a><li>\
+        <li><a href="#"><%= subbreddit.get("title") %></a></li>\
         <% }) %>\
     '),
 
@@ -117,6 +117,7 @@
 
   var homeView = new HomeView();
   $('#content').html(homeView.render().el);
+
 // })
 
 /* This creates the Frontend Post Item View

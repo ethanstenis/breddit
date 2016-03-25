@@ -27,6 +27,6 @@ class CreateSubbredditUserTable extends Migration
      */
     public function down()
     {
-        Schema::drop('subbreddit_use');
+        Schema::drop('subbreddit_user');
     }
 }
