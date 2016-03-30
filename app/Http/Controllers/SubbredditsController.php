@@ -63,7 +63,7 @@ class SubbredditsController extends Controller
             $subbreddit->title = $request->title;
             $subbreddit->description = $request->description;
             $subbreddit->save();
-        } else { 
+        } else {
             return response ("Unauthorized", 403);
         }
 
@@ -81,7 +81,7 @@ class SubbredditsController extends Controller
         $subbreddit = \App\Subbreddit::find($id);
         if ($subbreddit->user_id = \Auth::user()->id) {
             $subbreddit->delete();
-        } else { 
+        } else {
             return response ("Unauthorized", 403);
         }
 

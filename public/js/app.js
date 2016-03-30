@@ -28,7 +28,14 @@ var PostModel = Backbone.Model.extend({
 // This creates the Frontend Subbreddit Model
 var SubbredditModel = Backbone.Model.extend({
   urlRoot: '/api/subbreddits/',
-  idAttribute: 'id'
+  idAttribute: 'id',
+
+  parse: function(response) {
+    if (response.posts) {
+      response.posts = new PostsCollection(response.posts);
+    }
+    return response;
+  }
 });
 
 // This creates the Frontend Comment Model
@@ -122,9 +129,25 @@ var SubbredditsListView = Backbone.View.extend({
 
   template: _.template('\
       <% subbreddits.each(function(subbreddit) { %>\
-        <li><a href="#"><%= subbreddit.get("title") %></a></li>\
+        <li><a data-id="<%= subbreddit.id %>" href="#"><%= subbreddit.get("title") %></a></li>\
         <% }) %>\
     '),
+
+    events: {
+      'click a': function(event) {
+        event.preventDefault();
+        var subbredditId = $(event.target).data('id');
+        var subbreddit = new SubbredditModel({ id: subbredditId });
+        subbreddit.fetch({
+          success: function(){
+            var postsListView = new PostsListView({
+              collection: subbreddit.get('posts')
+            });
+            $('#posts').html(postsListView.render().el);
+          }
+        });
+      }
+    },
 
   initialize: function() {
     this.listenTo(this.collection, 'update', this.render);
