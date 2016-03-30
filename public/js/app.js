@@ -4,119 +4,168 @@
 
 // $(document).ready(function) {
 
-  $.ajaxSetup({
-      headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-  });
+$.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
 
-  // MODELS - takes care of the resource functions
+// MODELS - takes care of the resource functions
 
-  // This creates the Frontend Post Model
-  var PostModel = Backbone.Model.extend({
-  	urlRoot: '/api/posts/',
-  	idAttribute: 'id'
-  });
+// This creates the Frontend Post Model
+var PostModel = Backbone.Model.extend({
+  urlRoot: '/api/posts/',
+  idAttribute: 'id',
 
-  // This creates the Frontend Subbreddit Model
-  var SubbredditModel = Backbone.Model.extend({
-  	urlRoot: '/api/subbreddits/',
-  	idAttribute: 'id'
-  });
+  parse: function(response) {
+    if (response.subbreddit) {
+      response.subbreddit = new SubbredditModel(response.subbreddit);
+    }
+    return response;
+  }
+});
 
-  // This creates the Frontend Comment Model
-  var CommentModel = Backbone.Model.extend({
-  	urlRoot: '/api/comments/',
-  	idAttribute: 'id'
-  });
+// This creates the Frontend Subbreddit Model
+var SubbredditModel = Backbone.Model.extend({
+  urlRoot: '/api/subbreddits/',
+  idAttribute: 'id'
+});
 
-  // This creates the Frontend User Model
-  var UserModel = Backbone.Model.extend({
-  	urlRoot: '/api/users/',
-  	idAttribute: 'id'
-  });
+// This creates the Frontend Comment Model
+var CommentModel = Backbone.Model.extend({
+  urlRoot: '/api/comments/',
+  idAttribute: 'id'
+});
 
-
-  // COLLECTIONS
-
-  // This creates the Frontend Post Collection
-  var PostsCollection = Backbone.Collection.extend({
-  	url: '/api/posts/',
-  	model: PostModel
-  });
-
-  // This creates the Frontend Subbreddit Collection
-  var SubbredditsCollection = Backbone.Collection.extend({
-  	url: '/api/subbreddits/',
-  	model: SubbredditModel
-  });
-
-  // This creates the Frontend Comment Collection
-  var CommentsCollection = Backbone.Collection.extend({
-  	url: '/api/comments/',
-  	model: CommentModel
-  });
-
-  // This creates the Frontend User Collection
-  var UsersCollection = Backbone.Collection.extend({
-  	url: '/api/users/',
-  	model: UserModel
-  });
+// This creates the Frontend User Model
+var UserModel = Backbone.Model.extend({
+  urlRoot: '/api/users/',
+  idAttribute: 'id'
+});
 
 
-  // VIEWS
+// COLLECTIONS
 
-  var HomeView = Backbone.View.extend({
-    el: '\
-      <div class="container">\
-        <div class="row">\
-          <div class="three columns"></div>\
-          <div class="six columns"></div>\
-            <div class="row">\
-              <div class="twelve columns"></div>\
-            </div>\
-            <div class="row">\
-              <div class="twelve columns"></div>\
-            </div>\
-            <div class="three columns" id="all-subbreddits"></div>\
+// This creates the Frontend Post Collection
+var PostsCollection = Backbone.Collection.extend({
+  url: '/api/posts/',
+  model: PostModel
+});
+
+// This creates the Frontend Subbreddit Collection
+var SubbredditsCollection = Backbone.Collection.extend({
+  url: '/api/subbreddits/',
+  model: SubbredditModel
+});
+
+// This creates the Frontend Comment Collection
+var CommentsCollection = Backbone.Collection.extend({
+  url: '/api/comments/',
+  model: CommentModel
+});
+
+// This creates the Frontend User Collection
+var UsersCollection = Backbone.Collection.extend({
+  url: '/api/users/',
+  model: UserModel
+});
+
+
+// VIEWS
+
+var HomeView = Backbone.View.extend({
+  el: '\
+    <div class="container">\
+      <div class="row">\
+        <div class="three columns"></div>\
+        <div class="six columns">\
+          <div class="row">\
+            <div class="twelve columns" id="posts"></div>\
+          </div>\
+          <div class="row">\
+            <div class="twelve columns"></div>\
+          </div>\
         </div>\
+        <div class="three columns" id="all-subbreddits"></div>\
       </div>\
+    </div>\
     ',
 
-    render: function() {
-      var that = this;
-      var subbreddits = new SubbredditsCollection();
-      subbreddits.fetch();
-      var subbredditsListView = new SubbredditsListView({
-            collection: subbreddits
-      });
-      this.$el.find('#all-subbreddits').html(subbredditsListView.render().el);
-      // Render functions should always return 'this' at the end.
-      return this;
-    }
-  });
+  insertSubbreddits: function() {
+    var subbreddits = new SubbredditsCollection();
+    subbreddits.fetch();
+    var subbredditsListView = new SubbredditsListView({
+      collection: subbreddits
+    });
+    this.$el.find('#all-subbreddits').html(subbredditsListView.render().el);
+  },
 
-  var SubbredditsListView = Backbone.View.extend({
-    el: '<ul></ul>',  // put parent container in 'el' variable, and rest in template
+  insertPosts: function() {
+    var posts = new PostsCollection();
+    posts.fetch();
+    var postsListView = new PostsListView({
+      collection: posts
+    });
+    this.$el.find('#posts').html(postsListView.render().el);
+  },
 
-    template: _.template('\
+  render: function() {
+    this.insertSubbreddits();
+    this.insertPosts();
+    // Render functions should always return 'this' at the end.
+    return this;
+  }
+});
+
+var SubbredditsListView = Backbone.View.extend({
+  el: '<ul></ul>', // put parent container in 'el' variable, and rest in template
+
+  template: _.template('\
       <% subbreddits.each(function(subbreddit) { %>\
         <li><a href="#"><%= subbreddit.get("title") %></a></li>\
         <% }) %>\
     '),
 
-    initialize: function() {
-      this.listenTo(this.collection, 'update', this.render);
-    },
+  initialize: function() {
+    this.listenTo(this.collection, 'update', this.render);
+  },
 
-    render: function() {
-      $(this.el).html(this.template({ subbreddits: this.collection }));
-      return this;
-    }
-  });
+  render: function() {
+    $(this.el).html(this.template({
+      subbreddits: this.collection
+    }));
+    return this;
+  }
+});
 
-  var homeView = new HomeView();
-  $('#content').html(homeView.render().el);
+var PostsListView = Backbone.View.extend({
+  el: '<ul></ul>',
+
+  template: _.template('\
+      <% posts.each(function(post) { %>\
+        <li>\
+            <a href="#"><%= post.get("title") %></a>\
+            <% if (post.get("subbreddit")) { %>\
+            <small><%= post.get("subbreddit").get("title") %></small>\
+            <% } %>\
+        </li>\
+        <% }) %>\
+    '),
+
+  initialize: function() {
+    this.listenTo(this.collection, 'update', this.render);
+  },
+
+  render: function() {
+    $(this.el).html(this.template({
+      posts: this.collection
+    }));
+    return this;
+  }
+});
+
+var homeView = new HomeView();
+$('#content').html(homeView.render().el);
 
 // })
 
