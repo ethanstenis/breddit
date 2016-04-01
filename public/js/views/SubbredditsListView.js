@@ -1,6 +1,3 @@
-var Backbone = require('backbone');
-var _= require('underscore');
-
 var SubbredditsListView = Backbone.View.extend({
   el: '<ul></ul>', // put parent container in 'el' variable, and rest in template
 
