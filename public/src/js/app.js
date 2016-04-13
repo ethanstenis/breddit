@@ -21,7 +21,7 @@ $(document).on('ready', function() {
   $('#content').html(TopNavView.render().el);
   TopNavView.render();
 
-  var AppRouter = Backbone.Router.extend() {
+  var AppRouter = Backbone.Router.extend({
     routes: {
       '/': 'home',
       '': 'home',
