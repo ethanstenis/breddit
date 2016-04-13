@@ -6,6 +6,7 @@
     "foundation-sites": "^5.5.3",
     "gulp": "^3.9.1",
     "gulp-sass": "^2.2.0",
+    "gulp-sourcemaps": "^1.6.0",
     "jquery": "^2.2.2",
     "source-map": "^0.5.3",
     "underscore": "^1.8.3",
