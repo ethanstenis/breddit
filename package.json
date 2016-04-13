@@ -7,17 +7,15 @@
     "gulp": "^3.9.1",
     "gulp-sass": "^2.2.0",
     "jquery": "^2.2.2",
+    "source-map": "^0.5.3",
     "underscore": "^1.8.3",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },
-
   "browser": {
     "foundation": "./node_modules/foundation-sites/js/foundation/js"
   },
-
   "scripts": {
     "develop": "./node_modules/.bin/gulp build"
-
   }
 }
