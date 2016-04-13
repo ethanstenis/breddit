@@ -44,7 +44,7 @@ Route::group(['middleware' => 'web'], function () {
 
           Route::resource('posts', 'PostsController', ['only' => ['index', 'show']]);
 
-          Route::resource('users', 'UsersController', ['except' => ['create', 'edit']]);
+          Route::resource('users', 'UsersController', ['only' => ['show']]);
 
           Route::resource('comments', 'CommentsController', ['only' => ['index', 'show']]);
 
