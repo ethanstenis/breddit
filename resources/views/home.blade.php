@@ -11,8 +11,9 @@
 
 
     <!-- Styles -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
-    <style>
+<link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+<style>
         body {
           font-size: 14px;
         }
@@ -34,7 +35,7 @@
     </style>
 </head>
 <body >
-    <nav></nav>
+    <div id="nav"></div>
     <div id="content"></div>
 
     <!-- JavaScripts -->
