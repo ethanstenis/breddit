@@ -1,9 +1,10 @@
 var Backbone = require('backbone');
-var _= require('underscore');
+var _ = require('underscore');
 
 var PostView = Backbone.View.extend({
   el: '<div class="container"></div>',
-  template: _.('\
+
+  template: _.template('\
   <div class="row">\
     <div class="columns small-12">\
       <h1><%= model.get("title") %></h1>\

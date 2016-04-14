@@ -13,7 +13,7 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "browser": {
-    "foundation": "./node_modules/foundation-sites/js/foundation/js"
+    "foundation": "./node_modules/foundation-sites/js/foundation/foundation.js"
   },
   "scripts": {
     "develop": "./node_modules/.bin/gulp build"

@@ -30,7 +30,7 @@ $(document).on('ready', function() {
 
     home: function() {
       var homeView = new HomeView();
-      $('#content').html(homeView..el);
+      $('#content').html(homeView.el);
       homeView.render();
     },
 
@@ -40,7 +40,7 @@ $(document).on('ready', function() {
       var postView = new PostView({
           model: post
       });
-      $('#content').html(postView..el);
+      $('#content').html(postView.el);
       postView.render();
     },
 
