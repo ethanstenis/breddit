@@ -10,6 +10,7 @@ var PostView = require('./views/PostView.js');
 var PostModel = require('./models/PostModel.js');
 
 $(document).on('ready', function() {
+	$(document).foundation();
 
   $.ajaxSetup({
     headers: {
@@ -18,14 +19,14 @@ $(document).on('ready', function() {
   });
 
   var topNavView = new TopNavView();
-  $('#content').html(TopNavView.render().el);
-  TopNavView.render();
+  $('#nav').html(topNavView.el);
+  topNavView.render();
 
   var AppRouter = Backbone.Router.extend({
     routes: {
       '/': 'home',
       '': 'home',
-      'post': 'post'
+      'post/:id': 'post'
     },
 
     home: function() {
@@ -34,19 +35,19 @@ $(document).on('ready', function() {
       homeView.render();
     },
 
-    post: function() {
+    post: function(id) {
       var post = new PostModel({ id: id });
       post.fetch();
       var postView = new PostView({
-          model: post
+        model: post
       });
       $('#content').html(postView.el);
       postView.render();
-    },
+    }
 
   });
 
   var router = new AppRouter();
   Backbone.history.start();
 
-});
+})

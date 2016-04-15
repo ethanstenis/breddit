@@ -26,13 +26,13 @@ gulp.task('sass', function () {
     .pipe(sourcemaps.init())
     .pipe(sass().on('error', sass.logError))
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('.public/css'));
+    .pipe(gulp.dest('./public/css'));
 });
 
 gulp.task('watch', function() {
-  gulp.watch('public/src/js/**/*.js', ['bundle']);
-  gulp.watch('public/src/js/**/*.scss)', ['sass']);
+  gulp.watch('./public/src/js/**/*.js', ['bundle']);
+  gulp.watch('./public/src/scss/**/*.scss', ['sass']);
 });
 
 gulp.task('build', ['bundle', 'sass']);
-gulp.task('default', ['bundle', 'watch']);
+gulp.task('default', ['build', 'watch']);
