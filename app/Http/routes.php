@@ -59,6 +59,9 @@ Route::group(['middleware' => 'web'], function () {
               Route::resource('comments', 'CommentsController', [
                  'only' => ['store', 'update', 'destroy']
               ]);
+              Route::resource('subbreddituser', 'SubbredditUserController', [
+
+              ]);
             });
       });
 });
